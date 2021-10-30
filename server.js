@@ -9,6 +9,9 @@ app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
 app.use(express.json());
 
+//lets the public folder be a static resource
+app.use(express.static('public'));
+
 const { animals } = require('./data/animals');
 
 function filterByQuery(query, animalsArray) {
@@ -98,6 +101,26 @@ app.get('/api/animals/:id', (req, res) => {
     res.send(404);
   }
 });
+
+
+//sets path for and retrieves HTML, see app.use near top for css and js files (static)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+app.get('/animals', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+
+app.get('/zookeepers', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});
+
+//wildcard * forces homepage
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
 
 app.post('/api/animals', (req, res) => {
   // set id based on what the next index of the array will be
